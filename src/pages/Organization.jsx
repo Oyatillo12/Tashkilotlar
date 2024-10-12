@@ -90,13 +90,12 @@ function Organization() {
     setSearch(e.target.value.toLowerCase())
   }
 
-  const searchWaiting = useDebounce(search, 700)
 
 
 
 
   const filteredData = data.filter((item) =>
-    item.companyName.toLowerCase().includes(searchWaiting) || item.address.toLowerCase().includes(searchWaiting)
+    item.companyName.toLowerCase().includes(search) || item.address.toLowerCase().includes(search)
   );
 
 
