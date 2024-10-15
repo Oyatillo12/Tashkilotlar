@@ -26,37 +26,36 @@ function SinglePage() {
       </div>
       <ul className='mt-10 border-gray-400 flex  border-[2px] rounded-lg shadow p-4 w-[50%]'>
         <li className='space-y-4 w-[50%]'>
-          <li className='flex flex-col space-y-2'>
+          <div className='flex flex-col space-y-2'>
             <span className='text-[15px] leading-[18px] text-gray-400'>ID</span>
             <strong className='text-[20px] leading-[22px] font-semibold'>{singleData.id}</strong>
-          </li>
-          <li className='flex flex-col space-y-2'>
+          </div>
+          <div className='flex flex-col space-y-2'>
             <span className='text-[15px] leading-[18px] text-gray-400'>Tashkilot Nomi</span>
             <strong className='text-[20px] leading-[22px] font-semibold'>{singleData.companyName ? singleData.companyName : <LineOutlined />}</strong>
-          </li>
-          <li className='flex flex-col space-y-2'>
+          </div>
+          <div className='flex flex-col space-y-2'>
             <span className='text-[15px] leading-[18px] text-gray-400'>Inn</span>
             <strong className='text-[20px] leading-[22px] font-semibold'>{singleData.inn ? singleData.inn : <LineOutlined />}</strong>
-          </li>
-          <li className='flex flex-col space-y-2'>
+          </div>
+          <div className='flex flex-col space-y-2'>
             <span className='text-[15px] leading-[18px] text-gray-400'>Holati</span>
             <strong className='text-[20px] leading-[22px] font-semibold'>{singleData.status}</strong>
-          </li>
-
+          </div>
         </li>
         <li className='space-y-4 w-[50%]'>
-          <li className='flex flex-col space-y-2'>
+          <div className='flex flex-col space-y-2'>
             <span className='text-[15px] leading-[18px] text-gray-400'>Hudud</span>
             <strong className='text-[20px] leading-[22px] font-semibold'>{singleData.regionName}</strong>
-          </li>
-          <li className='flex flex-col space-y-2'>
+          </div>
+          <div className='flex flex-col space-y-2'>
             <span className='text-[15px] leading-[18px] text-gray-400'>Manzil</span>
             <strong className='text-[20px] leading-[22px] font-semibold'>{singleData.address}</strong>
-          </li>
-          <li className='flex flex-col space-y-2'>
+          </div>
+          <div className='flex flex-col space-y-2'>
             <span className='text-[15px] leading-[18px] text-gray-400'>Yaratilgan vakt</span>
             <strong className='text-[20px] leading-[22px] font-semibold'>{singleData.createdDate}</strong>
-          </li>
+          </div>
         </li>
       </ul>
     </div >

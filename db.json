@@ -21,28 +21,6 @@
       "regionName": "Samarqand",
       "address": " Toshkent Chilonzor 9kv",
       "createdDate": "2018-05-11"
-    },
-    {
-      "id": "83f5",
-      "key": 39,
-      "companyName": "Inter-Nation",
-      "inn": "123242423",
-      "status": "1",
-      "regionId": "1",
-      "regionName": "Toshkent viloyati",
-      "address": "New York No. 1 Lake Park",
-      "createdDate": "2008-06-12"
-    },
-    {
-      "id": "c237",
-      "key": 6,
-      "companyName": "Everesy",
-      "inn": "122344455",
-      "status": "1",
-      "regionId": "1",
-      "regionName": "Toshkent viloyati",
-      "address": "Bunyodkor Novza metrosi yonida",
-      "createdDate": "2024-10-17"
     }
   ]
 }

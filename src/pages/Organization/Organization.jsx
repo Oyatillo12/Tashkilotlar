@@ -1,4 +1,4 @@
-import { Button, Input, Popover } from 'antd'
+import { Button, Input, Modal, Popover } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { AddIcon } from '../../assets/images/icon'
 import CustomSelect from '../../components/CustomSelect'
@@ -11,6 +11,8 @@ function Organization() {
   const navigate = useNavigate()
   const [refresh, setRefresh] = useState(false)
   const [regionId, setRegionId] = useState("")
+  const [deleteModal, setDeleteModal] = useState(false)
+  const [deleteId, setDeleteId] = useState(null)
   const regionList = [
     {
       value: 1,
@@ -89,14 +91,27 @@ function Organization() {
 
     }
   }
-
+  function handleDeleteShow(id) {
+    setDeleteModal(true)
+    setDeleteId(id)
+  }
+  function handleDelete(){
+    useAxios().delete(`/organization/${deleteId}`).then(() =>{
+      setIsLoading(true)
+      setDeleteModal(false)
+      setTimeout(() => {
+        setRefresh(!refresh)
+      },500)
+      
+    })
+  }
 
   useEffect(() => {
     useAxios().get(`/organization?regionId=${regionId}`).then(res => {
       setIsLoading(false)
       setData(res.data.map((item, index) => {
         item.index = index + 1;
-        item.address = <Popover placement="top"  content={item.address}>
+        item.address = <Popover placement="top" content={item.address}>
           <p className='text-ellipsis cursor-pointer whitespace-nowrap overflow-hidden w-[180px]'>{item.address}</p>
         </Popover>
         item.companyName = item.companyName ? item.companyName : <LineOutlined />
@@ -114,7 +129,7 @@ function Organization() {
         }
         item.action = <div className='flex items-center space-x-6'>
           <EllipsisOutlined onClick={() => navigate(`${item.id}`)} className='scale-[1.5] duration-300 hover:scale-[1.8]' />
-          <DeleteOutlined className='scale-[1.5] duration-300 hover:scale-[1.8]' />
+          <DeleteOutlined onClick={() => handleDeleteShow(item.id)} className='scale-[1.5] duration-300 hover:scale-[1.8]' />
         </div>
         return item
       }))
@@ -123,23 +138,32 @@ function Organization() {
 
 
   return (
-    <div className='p-5'>
-      <div className='flex items-center justify-between'>
-        <div>
-          <h2 className='text-[25px] font-bold'>Tshkilotlar</h2>
-          <span className='text-[15px] pl-1'>tashkilotlar ({data.length})</span>
-        </div>
+    <>
+      <div className='p-5'>
+        <div className='flex items-center justify-between'>
+          <div>
+            <h2 className='text-[25px] font-bold'>Tshkilotlar</h2>
+            <span className='text-[15px] pl-1'>tashkilotlar ({data.length})</span>
+          </div>
 
-        <Button onClick={() => navigate('add')} icon={<AddIcon />} size='large' type='primary'>Qo'shish</Button>
+          <Button onClick={() => navigate('add')} icon={<AddIcon />} size='large' type='primary'>Qo'shish</Button>
+        </div>
+        <div className='flex items-center space-x-5 mt-6'>
+          <Input onChange={handleSearch} className='w-[350px]' type='text' placeholder='Qidirish...' size='large' allowClear />
+          <CustomSelect width={'350px'} setIsLoading={setIsLoading} placeholder={'Tanlash...'} options={regionList} setChooseId={setRegionId} />
+        </div>
+        <div className='mt-5'>
+          <CustomTable isLoading={isLoading} columns={columns} data={data} />
+        </div>
       </div>
-      <div className='flex items-center space-x-5 mt-6'>
-        <Input onChange={handleSearch} className='w-[350px]' type='text' placeholder='Qidirish...' size='large' allowClear />
-        <CustomSelect width={'350px'} setIsLoading={setIsLoading} placeholder={'Tanlash...'} options={regionList} setChooseId={setRegionId} />
-      </div>
-      <div className='mt-5'>
-        <CustomTable isLoading={isLoading} columns={columns} data={data} />
-      </div>
-    </div>
+      <Modal footer open={deleteModal} onCancel={() => setDeleteModal(false)}>
+          <h3 className='text-[20px] text-center font-semibold'>Tashkilot ochirish ...?</h3>
+          <div className='flex items-center justify-between mt-5'>
+            <Button onClick={() => setDeleteModal(false)} size='large' className='w-[48%]' type='default'>Yo'q</Button>
+            <Button onClick={handleDelete} size='large' className='!bg-red-500 w-[48%]' type='primary'>Ochirish</Button>
+          </div>
+      </Modal>
+    </>
   )
 }
 
