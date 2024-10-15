@@ -1,5 +1,7 @@
-import Organization from './Organization';
+import Organization from './Organization/Organization';
 import RegionUsers from './RegionUsers';
 import CapitalUsers from './CapitalUsers';
+import SinglePage from './Organization/SinglePage';
+import OrganizationAdd from './Organization/OrganizationAdd';
 
-export { Organization, RegionUsers, CapitalUsers }
+export {OrganizationAdd, SinglePage, Organization, RegionUsers, CapitalUsers }

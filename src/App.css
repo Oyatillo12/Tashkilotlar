@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button{
+    display: none;
+}
+
+
 .ant-menu-item-selected{
     background-color: rgb(121, 103, 3) !important;
 }

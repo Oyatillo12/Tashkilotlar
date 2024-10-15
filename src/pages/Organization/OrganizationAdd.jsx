@@ -1,0 +1,123 @@
+import { ArrowLeftOutlined, LoadingOutlined, UserAddOutlined } from '@ant-design/icons'
+import { Button, DatePicker, Input } from 'antd'
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import CustomSelect from '../../components/CustomSelect'
+import { useAxios } from '../../hooks/useAxios'
+import toast, { Toaster } from 'react-hot-toast'
+
+function OrganizationAdd() {
+  const navigate = useNavigate()
+  const [isLoading, setIsLoading] = useState(false)
+
+  const statusData = [
+    {
+      value: '1',
+      label: 'Faol',
+    },
+    {
+      value: '2',
+      label: 'Faol emas',
+    },
+    {
+      value: '3',
+      label: 'Jarayonda',
+    }
+  ]
+  const regoinsData = [
+    {
+      value: '1',
+      label: 'Toshkent viloyati',
+    },
+    {
+      value: '2',
+      label: 'Samarqand viloyati',
+    },
+    {
+      value: '3',
+      label: 'Andijon viloyati',
+    }
+  ]
+  const [companyName, setCompanyName] = useState(null)
+  const [inn, setInn] = useState(null)
+  const [statusId, setStatusId] = useState(null)
+  const [regionId, setRegionId] = useState(null)
+  const [regionName, setRegionName] = useState(null)
+  const [address, setAddress] = useState(null)
+  const [createdDate, setCreatedDate] = useState(null)
+
+  const handlePicker = (date, dateString) => {
+    setCreatedDate(dateString);
+  };
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    const data = {
+      key: Math.round(Math.random() * 100),
+      companyName,
+      inn,
+      status: statusId,
+      regionId: regionId,
+      regionName,
+      address,
+      createdDate
+    }
+    useAxios().post('/organization', data).then(res => {
+      setIsLoading(true)
+      toast.success("Tashkilot qoshildi")
+      setTimeout(() => {
+        setIsLoading(false)
+        navigate(-1)
+      }, 500)
+    })
+
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className='p-5'>
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+      />
+      <div className='flex items-center justify-between'>
+        <div className='flex items-center space-x-4'>
+          <button type='button' onClick={() => navigate(-1)}><ArrowLeftOutlined className='scale-150' /></button>
+          <h2 className='text-[25px] font-bold'>Tashkilotlar yaratish</h2>
+        </div>
+        <Button htmlType='submit' icon={ isLoading ? <LoadingOutlined/> : <UserAddOutlined />} size='large' type='primary'>Saqlash</Button>
+      </div>
+      <div className='w-[70%] mt-10 flex justify-between'>
+        <div className='w-[49%] space-y-4'>
+          <label className='space-y-2 flex flex-col'>
+            <span className='text-[15px]'>Tashkilot nomi kiriting</span>
+            <Input className='text-[20px]' required allowClear size='large' placeholder='Tashkilot nomini kiriting' type='text' value={companyName} onChange={(e) => setCompanyName(e.target.value)} />
+          </label>
+          <label className='space-y-2 flex flex-col'>
+            <span className='text-[15px]'>INN kiriting</span>
+            <Input maxLength={9} className='text-[20px]' required allowClear size='large' placeholder='INN kiriting' type='number' value={inn} onChange={(e) => setInn(e.target.value)} />
+          </label>
+          <label className='space-y-2 flex flex-col'>
+            <span className='text-[15px]'>Holat turini tanlang</span>
+            <CustomSelect placeholder={"Holat turini tanlang"} options={statusData} setChooseId={setStatusId} width={"100%"} />
+          </label>
+          <label className='space-y-2 flex flex-col'>
+            <span className='text-[15px]'>Hudud tanlang</span>
+            <CustomSelect setLabelValue={setRegionName} placeholder={"Hudud tanlang"} options={regoinsData} setChooseId={setRegionId} width={"100%"} />
+          </label>
+        </div>
+        <div className='w-[49%] space-y-4'>
+          <label className='space-y-2 flex flex-col'>
+            <span className='text-[15px]'>Manzil kiriting</span>
+            <Input className='text-[20px]' required allowClear size='large' placeholder='Manzil kiriting' type='text' value={address} onChange={(e) => setAddress(e.target.value)} />
+          </label>
+          <label className='space-y-2 flex flex-col'>
+            <span className='text-[15px]'>Vakt kiriting</span>
+            <DatePicker onChange={handlePicker} className='py-[10px]' size='large' />
+          </label>
+        </div>
+      </div>
+    </form>
+  )
+}
+
+export default OrganizationAdd
