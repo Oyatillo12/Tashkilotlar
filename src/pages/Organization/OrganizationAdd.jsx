@@ -206,7 +206,7 @@ function OrganizationAdd() {
           </label>
           <label className='space-y-2 flex flex-col'>
             <span className='text-[15px]'>{isUser ? "Telefon raqamingiz" : "Vaqt kiriting"}</span>
-            {isUser ? <Input className='text-[20px]' required allowClear size='large' placeholder='Raqam kiriting' type='number' value={phoneNumber?.split(" ").join("")} onChange={(e) => setPhoneNumber(e.target.value)} />
+            {isUser ? <Input className='text-[20px]' required allowClear size='large' placeholder='Raqam kiriting' type='number' value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
             : <DatePicker allowClear={false} value={createdDate ? dayjs(createdDate, dateFormat) : dayjs()} onChange={handlePicker} className='py-[10px]' size='large' />}
           </label>
         </div>

@@ -113,7 +113,7 @@ function CapitalUsers() {
         item.status = item.status ? "Faol" : "Faol emas"
         item.action = <div className='flex items-center space-x-6'>
           <EllipsisOutlined onClick={() => navigate(`${item.id}`)} className='scale-[1.5] duration-300 hover:scale-[1.8]' />
-          <EditOutlined className='scale-[1.5] duration-300 hover:scale-[1.8]' />
+          <EditOutlined onClick={() => navigate(`${item.id}/edit`)} className='scale-[1.5] duration-300 hover:scale-[1.8]' />
           <DeleteOutlined onClick={() => handleDeleteShow(item.id)} className='scale-[1.5] duration-300 hover:scale-[1.8]' />
         </div>
         return item
