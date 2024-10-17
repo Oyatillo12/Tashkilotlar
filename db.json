@@ -23,15 +23,26 @@
       "createdDate": "2024-10-15"
     },
     {
-      "key": 25,
-      "companyName": "cscs12",
-      "inn": "33241214",
-      "status": "3",
-      "regionId": "1",
-      "regionName": "Toshkent viloyati",
-      "address": "cscscs",
-      "createdDate": "2024-10-20",
-      "id": "1891"
+      "id": "7e61",
+      "key": 21,
+      "companyName": "Everest",
+      "inn": "123456789",
+      "status": "1",
+      "regionId": "3",
+      "regionName": "Andijon viloyati",
+      "address": "Novza metrosida",
+      "createdDate": "2024-10-17"
+    },
+    {
+      "id": "6ec6",
+      "key": 40,
+      "companyName": "hello",
+      "inn": "2e11",
+      "status": "2",
+      "regionId": "2",
+      "regionName": "Samarqand viloyati",
+      "address": "e2e2ewqd",
+      "createdDate": "2024-10-17"
     }
   ],
   "users": [
@@ -39,11 +50,21 @@
       "key": 1,
       "name": "Asadillo",
       "email": "Asadillo@gmail.com",
-      "status": false,
-      "phone": "+998 99 555 25 25",
+      "status": "1",
+      "phone": "998995552525",
       "job": "Frontend Manager",
       "address": "chilnzor mtrosi",
       "id": "1"
+    },
+    {
+      "key": 83,
+      "name": "hello12",
+      "email": "vnkvns@ma.l.cpom",
+      "status": "1",
+      "phone": "99854314121",
+      "job": "hello",
+      "address": "wnjw",
+      "id": "db55"
     }
   ]
 }

@@ -10,6 +10,9 @@ function CustomRoutes() {
       <Route path='/add' element={<OrganizationAdd/>}/>
       <Route path='/:id/edit' element={<OrganizationAdd/>}/>
       <Route path='/capital-users' element={<CapitalUsers/>}/>
+      <Route path='/capital-users/:id' element={<SinglePage/>}/>
+      <Route path='/capital-users/add' element={<OrganizationAdd/>}/>
+      <Route path='/capital-users/:id/edit' element={<OrganizationAdd/>}/>
       <Route path='/region-users' element={<RegionUsers/>}/>
     </Routes>
   )

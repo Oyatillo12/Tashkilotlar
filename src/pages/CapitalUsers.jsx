@@ -10,6 +10,7 @@ import toast, { Toaster } from 'react-hot-toast'
 function CapitalUsers() {
   const navigate = useNavigate()
   const [users, setUsers] = useState([])
+  const [allUsers, setAllUsers] = useState([])
   const [refresh, setRefresh] = useState(false)
   const [deleteModal, setDeleteModal] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -66,13 +67,16 @@ function CapitalUsers() {
   function handleSearch(e) {
     setIsLoading(true)
     if (e.target.value) {
-      const fileredData = users.filter(item => item.name.length > 0 && item.name.toLowerCase().includes(e.target.value.toLowerCase()));
+      const fileredUsers = allUsers.filter(item => item.name.length > 0  ? item.name.toLowerCase().includes(e.target.value.toLowerCase()) : "");
       setTimeout(() => {
-        setUsers(fileredData)
+        setUsers(fileredUsers)
         setIsLoading(false)
       }, 1000)
     } else {
-      setTimeout(() => { setRefresh(!refresh) }, 1000)
+      setTimeout(() => {
+        setUsers(allUsers)
+        setIsLoading(false)
+      }, 1000)
     }
   }
   // Search end
@@ -99,7 +103,7 @@ function CapitalUsers() {
   useEffect(() => {
     useAxios().get(`/users`).then(res => {
       setIsLoading(false)
-      setUsers(res.data.map((item, index) => {
+      const formattedUsers = res.data.map((item, index) => {
         item.index = index + 1;
         item.address = <Popover placement="top" content={item.address}>
           <p className='text-ellipsis cursor-pointer whitespace-nowrap overflow-hidden w-[180px]'>{item.address}</p>
@@ -108,12 +112,14 @@ function CapitalUsers() {
         item.email = item.email ? item.email : <LineOutlined />
         item.status = item.status ? "Faol" : "Faol emas"
         item.action = <div className='flex items-center space-x-6'>
-          <EllipsisOutlined className='scale-[1.5] duration-300 hover:scale-[1.8]' />
+          <EllipsisOutlined onClick={() => navigate(`${item.id}`)} className='scale-[1.5] duration-300 hover:scale-[1.8]' />
           <EditOutlined className='scale-[1.5] duration-300 hover:scale-[1.8]' />
           <DeleteOutlined onClick={() => handleDeleteShow(item.id)} className='scale-[1.5] duration-300 hover:scale-[1.8]' />
         </div>
         return item
-      }))
+      })
+        setUsers(formattedUsers)
+        setAllUsers(formattedUsers)
     })
   }, [refresh]);
   // request end
@@ -124,9 +130,9 @@ function CapitalUsers() {
         <div className='flex items-center justify-between'>
           <div>
             <h2 className='text-[25px] font-bold'>Poytaxt foydalanuvchilari</h2>
-            <span className='text-[15px] pl-1'>foydalanuvchilari ({users.length})</span>
+            <span className='text-[15px] pl-1'>foydalanuvchilari ({allUsers.length})</span>
           </div>
-          <Button onClick={() => navigate('/add')} icon={<AddIcon />} size='large' type='primary'>Qo'shish</Button>
+          <Button onClick={() => navigate('add')} icon={<AddIcon />} size='large' type='primary'>Qo'shish</Button>
         </div>
         <div className='mt-6'>
           <Input onChange={handleSearch} className='w-[350px]' type='text' placeholder='Qidirish...' size='large' allowClear />

@@ -11,6 +11,7 @@ function Organization() {
   const navigate = useNavigate()
   const [refresh, setRefresh] = useState(false)
   const [regionId, setRegionId] = useState("")
+  const [allData, setAllData] = useState([])
   const [deleteModal, setDeleteModal] = useState(false)
   const regionList = [
     {
@@ -23,11 +24,11 @@ function Organization() {
     },
     {
       value: 3,
-      label: 'Xorazm viloyati'
+      label: 'Andijon viloyati'
     },
     {
       value: 4,
-      label: 'Andijon viloyati'
+      label: 'Xorazm viloyati'
     },
     {
       value: 5,
@@ -40,7 +41,6 @@ function Organization() {
   ]
 
   //  Pagination start
-
   const [tableParams, setTableParams] = useState({
     pagination: {
       current: 1,
@@ -94,13 +94,13 @@ function Organization() {
   function handleSearch(e) {
     setIsLoading(true)
     if (e.target.value) {
-      const fileredData = data.filter(item => item.companyName.length > 0 ? item.companyName.toLowerCase().includes(e.target.value.toLowerCase()) : "");
+      const fileredData = allData.filter(item => item.companyName.length > 0 ? item.companyName.toLowerCase().includes(e.target.value.toLowerCase()) : "");
       setTimeout(() => {
         setData(fileredData)
         setIsLoading(false)
       }, 1000)
     } else {
-      setTimeout(() => setRefresh(!refresh), 1000)
+      setTimeout(() => setData(allData), 1000)
     }
   }
   // Search end
@@ -128,7 +128,7 @@ function Organization() {
   useEffect(() => {
     useAxios().get(`/organization?regionId=${regionId}`).then(res => {
       setIsLoading(false)
-      setData(res.data.map((item, index) => {
+       const formattedData = res.data.map((item, index) => {
         item.index = index + 1;
         item.address = <Popover placement="top" content={item.address}>
           <p className='text-ellipsis cursor-pointer whitespace-nowrap overflow-hidden w-[180px]'>{item.address}</p>
@@ -152,7 +152,9 @@ function Organization() {
           <DeleteOutlined onClick={() => handleDeleteShow(item.id)} className='scale-[1.5] duration-300 hover:scale-[1.8]' />
         </div>
         return item
-      }))
+      })
+      setData(formattedData)
+      setAllData(formattedData)
     })
   }, [refresh, regionId]);
   // request end
@@ -163,7 +165,7 @@ function Organization() {
         <div className='flex items-center justify-between'>
           <div>
             <h2 className='text-[25px] font-bold'>Tashkilotlar</h2>
-            <span className='text-[15px] pl-1'>tashkilotlar ({data.length})</span>
+            <span className='text-[15px] pl-1'>tashkilotlar ({allData.length})</span>
           </div>
 
           <Button onClick={() => navigate('/add')} icon={<AddIcon />} size='large' type='primary'>Qo'shish</Button>
