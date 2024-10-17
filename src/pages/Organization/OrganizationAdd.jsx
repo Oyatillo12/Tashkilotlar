@@ -1,14 +1,21 @@
 import { ArrowLeftOutlined, LoadingOutlined, UserAddOutlined } from '@ant-design/icons'
 import { Button, DatePicker, Input } from 'antd'
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import CustomSelect from '../../components/CustomSelect'
 import { useAxios } from '../../hooks/useAxios'
 import toast, { Toaster } from 'react-hot-toast'
+import dayjs from 'dayjs'
 
 function OrganizationAdd() {
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(false)
+  const { id } = useParams()
+  const dateFormat = 'YYYY-MM-DD';
+  const {$y, $M, $D} = dayjs()
+
+
+
 
   const statusData = [
     {
@@ -41,11 +48,11 @@ function OrganizationAdd() {
   const [companyName, setCompanyName] = useState(null)
   const [inn, setInn] = useState(null)
   const [statusId, setStatusId] = useState(null)
+  const [statusName, setStatusName] = useState(null)
   const [regionId, setRegionId] = useState(null)
   const [regionName, setRegionName] = useState(null)
   const [address, setAddress] = useState(null)
   const [createdDate, setCreatedDate] = useState(null)
-
   const handlePicker = (date, dateString) => {
     setCreatedDate(dateString);
   };
@@ -60,31 +67,59 @@ function OrganizationAdd() {
       regionId: regionId,
       regionName,
       address,
-      createdDate
+      createdDate: createdDate ? createdDate : $y +"-" +($M + 1) +"-" +$D
     }
-    useAxios().post('/organization', data).then(res => {
-      setIsLoading(true)
-      toast.success("Tashkilot qoshildi")
-      setTimeout(() => {
-        setIsLoading(false)
-        navigate(-1)
-      }, 500)
-    })
+    if (id) {
+      useAxios().put(`/organization/${id}`, data).then(() => {
+        setIsLoading(true)
+        toast.success("Tashkilot tahrirlandi")
+        setTimeout(() => {
+          setIsLoading(false)
+          navigate(-1)
+        }, 1000)
+      })
+    }
+    else {
+      useAxios().post('/organization', data).then(res => {
+        setIsLoading(true)
+        toast.success("Tashkilot qoshildi")
+        setTimeout(() => {
+          setIsLoading(false)
+          navigate(-1)
+        }, 500)
+      })
+    }
 
   }
 
+  useEffect(() => {
+    if (id) {
+      useAxios().get(`/organization/${id}`).then(res => {
+        setCompanyName(res.data.companyName)
+        setInn(res.data.inn)
+        setStatusId(res.data.status)
+        setRegionId(res.data.regionId)
+        setRegionName(res.data.regionName)
+        setAddress(res.data.address)
+        if (res.data.createdDate.includes(".")) {
+          setCreatedDate(res.data.createdDate.split(".").reverse().join("-"))
+        }
+        else {
+          setCreatedDate(res.data.createdDate)
+        }
+      })
+    }
+  }, [])
+
   return (
     <form onSubmit={handleSubmit} className='p-5'>
-      <Toaster
-        position="top-center"
-        reverseOrder={false}
-      />
+      <Toaster position="top-center" reverseOrder={false} />
       <div className='flex items-center justify-between'>
         <div className='flex items-center space-x-4'>
           <button type='button' onClick={() => navigate(-1)}><ArrowLeftOutlined className='scale-150' /></button>
-          <h2 className='text-[25px] font-bold'>Tashkilotlar yaratish</h2>
+          <h2 className='text-[25px] font-bold'>{id ? "Tashkilot tahrirlash" : "Tashkilotlar yaratish"}</h2>
         </div>
-        <Button htmlType='submit' icon={ isLoading ? <LoadingOutlined/> : <UserAddOutlined />} size='large' type='primary'>Saqlash</Button>
+        <Button htmlType='submit' icon={isLoading ? <LoadingOutlined /> : <UserAddOutlined />} size='large' type='primary'>Saqlash</Button>
       </div>
       <div className='w-[70%] mt-10 flex justify-between'>
         <div className='w-[49%] space-y-4'>
@@ -98,11 +133,11 @@ function OrganizationAdd() {
           </label>
           <label className='space-y-2 flex flex-col'>
             <span className='text-[15px]'>Holat turini tanlang</span>
-            <CustomSelect placeholder={"Holat turini tanlang"} options={statusData} setChooseId={setStatusId} width={"100%"} />
+            <CustomSelect setLabelValue={setStatusName} value={statusId} placeholder={"Holat turini tanlang"} options={statusData} setChooseId={setStatusId} width={"100%"} />
           </label>
           <label className='space-y-2 flex flex-col'>
             <span className='text-[15px]'>Hudud tanlang</span>
-            <CustomSelect setLabelValue={setRegionName} placeholder={"Hudud tanlang"} options={regoinsData} setChooseId={setRegionId} width={"100%"} />
+            <CustomSelect  value={regionName} setLabelValue={setRegionName} placeholder={"Hudud tanlang"} options={regoinsData} setChooseId={setRegionId} width={"100%"} />
           </label>
         </div>
         <div className='w-[49%] space-y-4'>
@@ -112,7 +147,7 @@ function OrganizationAdd() {
           </label>
           <label className='space-y-2 flex flex-col'>
             <span className='text-[15px]'>Vakt kiriting</span>
-            <DatePicker onChange={handlePicker} className='py-[10px]' size='large' />
+            <DatePicker allowClear={false} value={createdDate ? dayjs(createdDate, dateFormat) : dayjs()} onChange={handlePicker} className='py-[10px]' size='large' />
           </label>
         </div>
       </div>

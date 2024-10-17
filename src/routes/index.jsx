@@ -8,6 +8,7 @@ function CustomRoutes() {
       <Route path='/' element={<Organization/>}/>
       <Route path='/:id' element={<SinglePage/>}/>
       <Route path='/add' element={<OrganizationAdd/>}/>
+      <Route path='/:id/edit' element={<OrganizationAdd/>}/>
       <Route path='/capital-users' element={<CapitalUsers/>}/>
       <Route path='/region-users' element={<RegionUsers/>}/>
     </Routes>

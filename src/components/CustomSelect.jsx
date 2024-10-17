@@ -1,18 +1,15 @@
 import React from 'react';
 import { Select } from 'antd';
 
-const CustomSelect = ({ options, placeholder, setChooseId, setIsLoading, width, setLabelValue }) => {
+const CustomSelect = ({ options, placeholder, setChooseId, setIsLoading, width, setLabelValue,value }) => {
     const onChange = (value, obj) => {
         if (setIsLoading) {
             setIsLoading(true)
             value ? setTimeout(() => setChooseId(value), 1000) : setTimeout(() => setChooseId(""), 1000)
         }
         if(setLabelValue){
-            setLabelValue(obj.label)
+            setLabelValue(obj?.label)
             setChooseId(value) 
-        }
-        else {
-            setChooseId(value)
         }
     };
     return (
@@ -21,6 +18,7 @@ const CustomSelect = ({ options, placeholder, setChooseId, setIsLoading, width, 
             showSearch
             allowClear
             size='large'
+            value={value}
             placeholder={placeholder}
             optionFilterProp="label"
             onChange={onChange}

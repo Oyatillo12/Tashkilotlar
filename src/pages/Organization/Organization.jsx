@@ -12,7 +12,6 @@ function Organization() {
   const [refresh, setRefresh] = useState(false)
   const [regionId, setRegionId] = useState("")
   const [deleteModal, setDeleteModal] = useState(false)
-  const [deleteId, setDeleteId] = useState(null)
   const regionList = [
     {
       value: 1,
@@ -39,6 +38,19 @@ function Organization() {
       label: 'Qoqon viloyati'
     },
   ]
+
+  //  Pagination start
+
+  const [tableParams, setTableParams] = useState({
+    pagination: {
+      current: 1,
+      pageSize: 5,
+    }
+  });
+  function handleTableChange(page) {
+    setTableParams({ ...tableParams, pagination: { ...tableParams.pagination, current: page.current } })
+  }
+  // pagination end
 
   const columns = [
     {
@@ -78,6 +90,7 @@ function Organization() {
   const [data, setData] = useState([])
   const [isLoading, setIsLoading] = useState(false)
 
+  // Saerch start
   function handleSearch(e) {
     setIsLoading(true)
     if (e.target.value) {
@@ -88,24 +101,30 @@ function Organization() {
       }, 1000)
     } else {
       setTimeout(() => setRefresh(!refresh), 1000)
-
     }
   }
+  // Search end
+
+  // Delete start 
+  const [deleteId, setDeleteId] = useState(null)
   function handleDeleteShow(id) {
     setDeleteModal(true)
     setDeleteId(id)
   }
-  function handleDelete(){
-    useAxios().delete(`/organization/${deleteId}`).then(() =>{
+  function handleDelete() {
+    useAxios().delete(`/organization/${deleteId}`).then(() => {
       setIsLoading(true)
       setDeleteModal(false)
       setTimeout(() => {
         setRefresh(!refresh)
-      },500)
-      
+      }, 500)
+
     })
   }
+  // Delete end
 
+
+  // request get all start
   useEffect(() => {
     useAxios().get(`/organization?regionId=${regionId}`).then(res => {
       setIsLoading(false)
@@ -129,40 +148,41 @@ function Organization() {
         }
         item.action = <div className='flex items-center space-x-6'>
           <EllipsisOutlined onClick={() => navigate(`${item.id}`)} className='scale-[1.5] duration-300 hover:scale-[1.8]' />
+          <EditOutlined onClick={() => navigate(`${item.id}/edit`)} className='scale-[1.5] duration-300 hover:scale-[1.8]' />
           <DeleteOutlined onClick={() => handleDeleteShow(item.id)} className='scale-[1.5] duration-300 hover:scale-[1.8]' />
         </div>
         return item
       }))
     })
   }, [refresh, regionId]);
-
+  // request end
 
   return (
     <>
       <div className='p-5'>
         <div className='flex items-center justify-between'>
           <div>
-            <h2 className='text-[25px] font-bold'>Tshkilotlar</h2>
+            <h2 className='text-[25px] font-bold'>Tashkilotlar</h2>
             <span className='text-[15px] pl-1'>tashkilotlar ({data.length})</span>
           </div>
 
-          <Button onClick={() => navigate('add')} icon={<AddIcon />} size='large' type='primary'>Qo'shish</Button>
+          <Button onClick={() => navigate('/add')} icon={<AddIcon />} size='large' type='primary'>Qo'shish</Button>
         </div>
         <div className='flex items-center space-x-5 mt-6'>
           <Input onChange={handleSearch} className='w-[350px]' type='text' placeholder='Qidirish...' size='large' allowClear />
           <CustomSelect width={'350px'} setIsLoading={setIsLoading} placeholder={'Tanlash...'} options={regionList} setChooseId={setRegionId} />
         </div>
         <div className='mt-5'>
-          <CustomTable isLoading={isLoading} columns={columns} data={data} />
+          <CustomTable onChange={handleTableChange} tableParams={tableParams} isLoading={isLoading} columns={columns} data={data} />
         </div>
       </div>
-      <Modal footer open={deleteModal} onCancel={() => setDeleteModal(false)}>
-          <h3 className='text-[20px] text-center font-semibold'>Tashkilot ochirish ...?</h3>
-          <div className='flex items-center justify-between mt-5'>
-            <Button onClick={() => setDeleteModal(false)} size='large' className='w-[48%]' type='default'>Yo'q</Button>
-            <Button onClick={handleDelete} size='large' className='!bg-red-500 w-[48%]' type='primary'>Ochirish</Button>
-          </div>
-      </Modal>
+      {deleteModal && <div className='backdrop-blur fixed inset-0 flex items-center justify-center' >   <Modal footer open={deleteModal} onCancel={() => setDeleteModal(false)}>
+        <h3 className='text-[20px] text-center font-semibold'>Tashkilot ochirish ...?</h3>
+        <div className='flex items-center justify-between mt-5'>
+          <Button onClick={() => setDeleteModal(false)} size='large' className='w-[48%]' type='default'>Yo'q</Button>
+          <Button onClick={handleDelete} size='large' className='!bg-red-500 w-[48%]' type='primary'>Ochirish</Button>
+        </div>
+      </Modal> </div>}
     </>
   )
 }
