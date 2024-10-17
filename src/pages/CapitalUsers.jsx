@@ -66,15 +66,13 @@ function CapitalUsers() {
   function handleSearch(e) {
     setIsLoading(true)
     if (e.target.value) {
-      const fileredData = data.filter(item => item.name.length > 0 ? item.name.toLowerCase().includes(e.target.value.toLowerCase()) : "");
+      const fileredData = users.filter(item => item.name.length > 0 && item.name.toLowerCase().includes(e.target.value.toLowerCase()));
       setTimeout(() => {
         setUsers(fileredData)
         setIsLoading(false)
       }, 1000)
     } else {
-      setTimeout(() => {
-        setRefresh(!refresh)
-      }, 1000)
+      setTimeout(() => { setRefresh(!refresh) }, 1000)
     }
   }
   // Search end
@@ -93,7 +91,6 @@ function CapitalUsers() {
         setRefresh(!refresh)
         toast.success("foydalanuvchilari o'chirildi")
       }, 500)
-
     })
   }
   // Delete end
